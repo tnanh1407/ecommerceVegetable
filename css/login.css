@@ -1,0 +1,109 @@
+@import "./main.css";
+
+body {
+  height: 100vh;
+  background: #e9f5e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  background: #fff;
+  width: 420px;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  text-align: center;
+}
+
+.logo img {
+  width: 120px;
+}
+
+h2 {
+  color: #2e7d32;
+  margin: 10px 0 30px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.form-group {
+  text-align: left;
+  margin: 12px 0;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #2e7d32;
+  font-size: 18px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid gray;
+  font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 4px #2e7d32; /* Tuỳ chọn: hiệu ứng đẹp hơn */
+}
+
+.password-box {
+  position: relative;
+}
+
+.toggle-eye {
+  position: absolute;
+  right: 14px;
+  top: 56%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: gray;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  margin-top: 14px;
+  background: #43a047;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.btn-login:hover {
+  background: #2e7d32;
+}
+
+.register-btn {
+  margin-top: 16px;
+  display: inline-block;
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.error {
+  margin-top: 10px;
+  color: red;
+  font-size: 1rem;
+}
+
+.success {
+  margin-top: 10px;
+  color: #2e7d32; /* Màu xanh lá */
+  font-size: 1rem;
+  font-weight: bold;
+}
