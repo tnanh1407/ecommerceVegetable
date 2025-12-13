@@ -19,3 +19,167 @@ body {
 .container-full {
   width: 100%;
 }
+
+/*==========================
+HEADER
+ =========================*/
+.header {
+  background-color: #1c8c3f;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+.header .header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header a {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header .header__left .header__logo img {
+  width: 100px;
+  height: auto;
+}
+
+.header .header__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header .header__right button {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  font-size: 16px;
+}
+
+.header .header__right input {
+  font-size: 14px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  width: 300px;
+  padding-left: 20px;
+}
+
+/* ============= */
+.header__user {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 15px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.header__user-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header__dropdown {
+  display: none;
+  /* Ẩn mặc định */
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Hiện dropdown khi hover vào header__user */
+.header__user:hover .header__dropdown {
+  display: block;
+}
+
+.header__dropdown a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.header__dropdown a:hover {
+  background-color: #f1f1f1;
+  color: #2e7d32;
+}
+
+/* Chỉnh lại header right một chút để căn giữa */
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/*==========================
+Footer
+ =========================*/
+
+.footer {
+  background-color: #30383d;
+  padding: 40px 0px 60px 0;
+}
+
+.footer__list {
+  display: flex;
+  padding: 40px 40px;
+  justify-content: center;
+}
+
+.footer .footer__item {
+  width: 500px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer .footer__item .footer__title {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.footer .footer__item p {
+  color: white;
+  font-size: 20px;
+}
+
+.footer .footer__item .footer__social {
+  color: white;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.footer .footer__item .footer__social i {
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.footer .footer__copyRight {
+  color: gray;
+  font-size: 18px;
+  text-align: center;
+}
