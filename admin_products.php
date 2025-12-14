@@ -19,19 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_product'])) {
     
     // Upload ảnh
     $image = $_FILES['image']['name'];
-    $target = "./assets/images/" . basename($image);
+    $target = "./assets/images/product/" . basename($image); 
     
     if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
         $sql = "INSERT INTO Products (name, price, type, nation, status, productDesc, image) 
                 VALUES ('$name', '$price', '$type', '$nation', '$status', '$desc', '$image')";
-        mysqli_query($conn, $sql);
-        echo "<script>alert('Thêm sản phẩm thành công!');</script>";
+        if(mysqli_query($conn, $sql)){
+            echo "<script>alert('Thêm sản phẩm thành công!'); window.location.href='admin_products.php';</script>";
+        } else {
+             echo "<script>alert('Lỗi Database: " . mysqli_error($conn) . "');</script>";
+        }
     } else {
         echo "<script>alert('Lỗi upload ảnh!');</script>";
     }
 }
 
-// --- 2. [MỚI] XỬ LÝ SỬA SẢN PHẨM ---
+// --- 2. XỬ LÝ SỬA SẢN PHẨM ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_product'])) {
     $id = $_POST['edit_id'];
     $name = $_POST['edit_name'];
@@ -40,18 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_product'])) {
     $nation = $_POST['edit_nation'];
     $status = $_POST['edit_status'];
     $desc = $_POST['edit_desc'];
-    $current_image = $_POST['current_image']; // Tên ảnh cũ
+    $current_image = $_POST['current_image'];
 
-    $image = $_FILES['edit_image']['name']; // Tên ảnh mới (nếu có)
+    $image = $_FILES['edit_image']['name']; 
     
-    // Logic: Nếu có chọn ảnh mới -> Upload và cập nhật tên ảnh
-    //        Nếu không chọn ảnh mới -> Giữ nguyên tên ảnh cũ
     if ($image != "") {
-        $target = "./assets/images/" . basename($image);
+        $target = "./assets/images/product/" . basename($image);
         move_uploaded_file($_FILES['edit_image']['tmp_name'], $target);
         $sql_image = ", image='$image'";
     } else {
-        $sql_image = ""; // Không thay đổi cột image
+        $sql_image = ""; 
     }
 
     $sql = "UPDATE Products SET 
@@ -87,78 +88,7 @@ if (isset($_GET['delete_id'])) {
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="css/admin.css">
-    <style>
-    /* --- CSS CHO POPUP (MODAL) --- */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        overflow-y: auto;
-        /* Cho phép cuộn nếu popup dài */
-    }
-
-    .modal-content {
-        background-color: #fff;
-        padding: 25px;
-        border-radius: 8px;
-        width: 600px;
-        max-height: 90vh;
-        /* Giới hạn chiều cao */
-        overflow-y: auto;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        position: relative;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 24px;
-        cursor: pointer;
-        color: #aaa;
-    }
-
-    .close-btn:hover {
-        color: #000;
-    }
-
-    /* Button style */
-    .btn-edit {
-        background-color: #f39c12;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 14px;
-        margin-right: 5px;
-    }
-
-    .btn-edit:hover {
-        background-color: #e67e22;
-    }
-    </style>
+    <link rel="stylesheet" href="css/admin_products.css">
 </head>
 
 <body>
@@ -167,51 +97,72 @@ if (isset($_GET['delete_id'])) {
     <div class="main-content">
         <h2 class="page-title">Quản lý sản phẩm</h2>
 
-        <div class="form-add">
-            <h3>Thêm sản phẩm mới</h3>
+        <div class="form-add-container">
+            <div class="form-add-header">
+                <i class="fa-solid fa-box-open"></i> Thêm sản phẩm mới
+            </div>
+
             <form method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Tên sản phẩm:</label>
-                    <input type="text" name="name" required>
+                <div class="form-row">
+                    <div class="form-col" style="flex: 2;">
+                        <label>Tên sản phẩm</label>
+                        <input type="text" name="name" placeholder="Nhập tên sản phẩm..." required>
+                    </div>
+                    <div class="form-col">
+                        <label>Giá (VNĐ)</label>
+                        <input type="number" name="price" placeholder="Ví dụ: 50000" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Giá (VNĐ):</label>
-                    <input type="number" name="price" required>
-                </div>
-                <div class="form-group" style="display: flex; gap: 20px;">
-                    <div style="flex:1">
-                        <label>Loại:</label>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Loại sản phẩm</label>
                         <select name="type">
                             <option value="rau_xanh">Rau xanh</option>
-                            <option value="rau_cu">Rau củ</option>
                             <option value="trai_cay">Trái cây</option>
+                            <option value="rau_qua">Rau quả</option>
                         </select>
                     </div>
-                    <div style="flex:1">
-                        <label>Xuất xứ:</label>
+                    <div class="form-col">
+                        <label>Xuất xứ</label>
                         <select name="nation">
                             <option value="VietNam">Việt Nam</option>
                             <option value="TrungQuoc">Trung Quốc</option>
                             <option value="ThaiLan">Thái Lan</option>
+                            <option value="HanQuoc">Hàn Quốc</option>
+                            <option value="My">Mỹ</option>
+                            <option value="NhatBan">Nhật Bản</option>
+                            <option value="NewZealand">New Zealand</option>
                         </select>
                     </div>
-                    <div style="flex:1">
-                        <label>Trạng thái:</label>
+                    <div class="form-col">
+                        <label>Trạng thái</label>
                         <select name="status">
                             <option value="con_hang">Còn hàng</option>
                             <option value="het_hang">Hết hàng</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Ảnh sản phẩm:</label>
-                    <input type="file" name="image" required>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Ảnh sản phẩm</label>
+                        <input type="file" name="image" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Mô tả:</label>
-                    <textarea name="desc" rows="3"></textarea>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Mô tả chi tiết</label>
+                        <textarea name="desc" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                    </div>
                 </div>
-                <button type="submit" name="add_product" class="btn-submit">Thêm sản phẩm</button>
+
+                <div style="text-align: right;">
+                    <button type="submit" name="add_product" class="btn-add-new">
+                        <i class="fa-solid fa-plus"></i> Thêm sản phẩm
+                    </button>
+                </div>
             </form>
         </div>
 
@@ -220,12 +171,14 @@ if (isset($_GET['delete_id'])) {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
+                        <th width="50">ID</th>
+                        <th width="80">Hình ảnh</th>
+                        <th width="150">Tên sản phẩm</th>
                         <th>Giá</th>
+                        <th>Xuất xứ</th>
                         <th>Loại</th>
                         <th>Trạng thái</th>
+                        <th>Mô tả</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -233,27 +186,45 @@ if (isset($_GET['delete_id'])) {
                     <?php
                     $result = mysqli_query($conn, "SELECT * FROM Products ORDER BY id DESC");
                     while ($row = mysqli_fetch_assoc($result)) {
+                        $imgUrl = "./assets/images/product/" . $row['image'];
                     ?>
                     <tr>
                         <td><?= $row['id'] ?></td>
-                        <td><img src="./assets/images/<?= $row['image'] ?>" width="50"
-                                style="object-fit: cover; height: 50px;"></td>
-                        <td><?= $row['name'] ?></td>
-                        <td><?= number_format($row['price']) ?>đ</td>
+                        <td>
+                            <img src="<?= $imgUrl ?>" alt="img" class="product-thumb">
+                        </td>
+                        <td>
+                            <div style="font-weight: bold;"><?= htmlspecialchars($row['name']) ?></div>
+                        </td>
+                        <td style="color: #d32f2f; font-weight: bold;"><?= number_format($row['price']) ?>đ</td>
+
+                        <td><?= $row['nation'] ?></td>
+
                         <td>
                             <?php 
-                                if ($row['type'] == 'rau_cu') echo 'Rau củ';
+                                if ($row['type'] == 'rau_xanh') echo 'Rau xanh';
                                 elseif ($row['type'] == 'rau_qua') echo 'Rau quả';
                                 else echo 'Trái cây';
                             ?>
                         </td>
                         <td>
                             <?php if($row['status'] == 'con_hang'): ?>
-                            <span style="color:green; font-weight:bold">Còn hàng</span>
+                            <span
+                                style="color:green; font-weight:bold; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Còn
+                                hàng</span>
                             <?php else: ?>
-                            <span style="color:red; font-weight:bold">Hết hàng</span>
+                            <span
+                                style="color:red; font-weight:bold; background: #ffebee; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Hết
+                                hàng</span>
                             <?php endif; ?>
                         </td>
+
+                        <td>
+                            <div class="desc-cell" title="<?= htmlspecialchars($row['productDesc']) ?>">
+                                <?= htmlspecialchars($row['productDesc']) ?>
+                            </div>
+                        </td>
+
                         <td>
                             <button class="btn-edit" onclick="openEditModal(
                                 '<?= $row['id'] ?>',
@@ -279,67 +250,76 @@ if (isset($_GET['delete_id'])) {
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeEditModal()">&times;</span>
-            <h3 style="margin-bottom: 20px; color: #2e7d32;">Chỉnh sửa sản phẩm</h3>
+            <h3 style="margin-bottom: 20px; color: #2e7d32; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Chỉnh sửa sản phẩm
+            </h3>
 
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="edit_id" id="edit_id">
                 <input type="hidden" name="current_image" id="current_image">
 
-                <div class="form-group">
-                    <label>Tên sản phẩm:</label>
-                    <input type="text" name="edit_name" id="edit_name" required>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Tên sản phẩm:</label>
+                        <input type="text" name="edit_name" id="edit_name" required>
+                    </div>
+                    <div class="form-col">
+                        <label>Giá (VNĐ):</label>
+                        <input type="number" name="edit_price" id="edit_price" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Giá (VNĐ):</label>
-                    <input type="number" name="edit_price" id="edit_price" required>
-                </div>
-
-                <div class="form-group" style="display: flex; gap: 20px;">
-                    <div style="flex:1">
+                <div class="form-row">
+                    <div class="form-col">
                         <label>Loại:</label>
                         <select name="edit_type" id="edit_type">
                             <option value="rau_xanh">Rau xanh</option>
-                            <option value="rau_cu">Rau củ</option>
                             <option value="trai_cay">Trái cây</option>
+                            <option value="rau_qua">Rau quả</option>
                         </select>
                     </div>
-                    <div style="flex:1">
+                    <div class="form-col">
                         <label>Xuất xứ:</label>
                         <select name="edit_nation" id="edit_nation">
                             <option value="VietNam">Việt Nam</option>
                             <option value="TrungQuoc">Trung Quốc</option>
                             <option value="ThaiLan">Thái Lan</option>
+                            <option value="HanQuoc">Hàn Quốc</option>
+                            <option value="My">Mỹ</option>
+                            <option value="NhatBan">Nhật Bản</option>
+                            <option value="NewZealand">New Zealand</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Trạng thái:</label>
-                    <select name="edit_status" id="edit_status">
-                        <option value="con_hang">Còn hàng</option>
-                        <option value="het_hang">Hết hàng</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>Trạng thái:</label>
+                        <select name="edit_status" id="edit_status">
+                            <option value="con_hang">Còn hàng</option>
+                            <option value="het_hang">Hết hàng</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-col">
                     <label>Ảnh hiện tại:</label>
                     <div id="preview_img_container">
-                        <img id="preview_img" src="" width="80" style="border: 1px solid #ddd; padding: 2px;">
+                        <img id="preview_img" src="" width="80">
                     </div>
                     <label style="margin-top: 10px;">Chọn ảnh mới (nếu muốn thay đổi):</label>
                     <input type="file" name="edit_image">
                 </div>
 
-                <div class="form-group">
+                <div class="form-col" style="margin-top: 15px;">
                     <label>Mô tả:</label>
                     <textarea name="edit_desc" id="edit_desc" rows="4"></textarea>
                 </div>
 
                 <div style="text-align: right; margin-top: 20px;">
                     <button type="button" onclick="closeEditModal()"
-                        style="padding: 8px 15px; margin-right: 10px; cursor: pointer;">Hủy</button>
-                    <button type="submit" name="edit_product" class="btn-submit">Lưu thay đổi</button>
+                        style="padding: 8px 15px; margin-right: 10px; cursor: pointer; background: #ddd; border: none; border-radius: 4px;">Hủy</button>
+                    <button type="submit" name="edit_product" class="btn-add-new">Lưu thay đổi</button>
                 </div>
             </form>
         </div>

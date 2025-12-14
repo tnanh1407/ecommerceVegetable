@@ -45,6 +45,16 @@ $statusText = ($product['status'] == 'con_hang') ? 'Còn hàng' : 'Hết hàng';
     <title><?php echo $product['name']; ?> - Organic Mart</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/productDetail.css">
+    <style>
+    .related-products .btn-quick-add {
+        background-color: green;
+        padding: 12px 20px;
+        margin-top: 12px;
+        border: none;
+        border-radius: 20px;
+        font-szie: 20px;
+    }
+    </style>
 </head>
 
 <body>
@@ -61,7 +71,8 @@ $statusText = ($product['status'] == 'con_hang') ? 'Còn hàng' : 'Hết hàng';
         <div class="product-detail-wrapper">
             <div class="detail-left">
                 <div class="main-image">
-                    <img src="./assets/images/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+                    <img src="./assets/images/product/<?php echo $product['image']; ?>"
+                        alt="<?php echo $product['name']; ?>">
                 </div>
             </div>
 
@@ -132,7 +143,8 @@ $statusText = ($product['status'] == 'con_hang') ? 'Còn hàng' : 'Hết hàng';
                 <?php while($row = mysqli_fetch_assoc($resultRelated)) { ?>
                 <div class="related-item">
                     <a href="productDetail.php?id=<?php echo $row['id']; ?>" class="related-link">
-                        <img src="./assets/images/<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                        <img src="./assets/images/product/<?php echo $row['image']; ?>"
+                            alt="<?php echo $row['name']; ?>">
                         <h3><?php echo $row['name']; ?></h3>
                         <p class="price"><?php echo number_format($row['price'], 0, ',', '.'); ?>₫</p>
                     </a>

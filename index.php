@@ -64,20 +64,20 @@
         </div>
         <div class="category__list">
             <div class="category__item">
-                <a href="product.php?type=rau_xanh">
-                    <img src="./assets/images/rau_cu.jpg" alt="img_rauXanh" />
+                <a href="products.php?type=rau_xanh">
+                    <img src="./assets/images/rau_xanh.jpg" alt="img_rauXanh" />
                     <p>Rau xanh</p>
                 </a>
             </div>
             <div class="category__item">
-                <a href="product.php?type=rau_cu">
-                    <img src="./assets/images/nam_dui_ga.jpg" alt="img_rauCu" />
+                <a href="products.php?type=rau_qua">
+                    <img src="./assets/images/rau_qua.jpg" alt="img_rauCu" />
                     <p>Rau Củ</p>
                 </a>
             </div>
             <div class="category__item">
-                <a href="product.php?type=trai_cay">
-                    <img src="./assets/images/nam_dui_ga.jpg" alt="img_traiCay" />
+                <a href="products.php?type=trai_cay">
+                    <img src="./assets/images/trai_cay.jpg" alt="img_traiCay" />
                     <p>Trái Cây</p>
                 </a>
             </div>

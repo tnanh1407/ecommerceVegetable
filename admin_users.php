@@ -13,31 +13,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_user'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password']; 
     $fullname = trim($_POST['fullname']);
+    $address = trim($_POST['address']);
     $role = $_POST['role'];
 
+    // Kiểm tra trùng username
     $checkSql = "SELECT * FROM Users WHERE username = '$username'";
     if (mysqli_num_rows(mysqli_query($conn, $checkSql)) > 0) {
         echo "<script>alert('Tên tài khoản này đã tồn tại!');</script>";
     } else {
-        $sql = "INSERT INTO Users (username, password, fullname, role) VALUES ('$username', '$password', '$fullname', '$role')";
-        mysqli_query($conn, $sql);
-        echo "<script>alert('Thêm thành công!');</script>";
+        // Mặc định avatar là user_default.png
+        $sql = "INSERT INTO Users (username, password, fullname, address, role, avatar) 
+                VALUES ('$username', '$password', '$fullname', '$address', '$role', 'user_default.png')";
+        
+        if(mysqli_query($conn, $sql)){
+            echo "<script>alert('Thêm thành công!'); window.location.href='admin_users.php';</script>";
+        } else {
+            echo "<script>alert('Lỗi: " . mysqli_error($conn) . "');</script>";
+        }
     }
 }
 
-// --- [MỚI] XỬ LÝ CẬP NHẬT (EDIT) NGƯỜI DÙNG ---
+// --- XỬ LÝ CẬP NHẬT (EDIT) NGƯỜI DÙNG ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_user'])) {
     $id = $_POST['edit_id'];
     $fullname = trim($_POST['edit_fullname']);
+    $address = trim($_POST['edit_address']);
     $role = $_POST['edit_role'];
     $password = $_POST['edit_password'];
 
-    // Nếu người dùng nhập mật khẩu mới thì cập nhật, không thì giữ nguyên
+    $sql = "UPDATE Users SET fullname='$fullname', address='$address', role='$role'";
+
+    // Nếu có nhập pass mới thì cập nhật luôn
     if (!empty($password)) {
-        $sql = "UPDATE Users SET fullname='$fullname', role='$role', password='$password' WHERE id=$id";
-    } else {
-        $sql = "UPDATE Users SET fullname='$fullname', role='$role' WHERE id=$id";
+        $sql .= ", password='$password'";
     }
+    
+    $sql .= " WHERE id=$id";
 
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('Cập nhật thông tin thành công!'); window.location.href='admin_users.php';</script>";
@@ -70,75 +81,7 @@ if (isset($_GET['delete_id'])) {
     <meta charset="UTF-8">
     <title>Quản lý người dùng</title>
     <link rel="stylesheet" href="css/admin.css">
-    <style>
-    /* --- CSS CHO POPUP (MODAL) --- */
-    .modal {
-        display: none;
-        /* Ẩn mặc định */
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        /* Màu nền tối mờ */
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background-color: #fff;
-        padding: 25px;
-        border-radius: 8px;
-        width: 500px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        position: relative;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 24px;
-        cursor: pointer;
-        color: #aaa;
-    }
-
-    .close-btn:hover {
-        color: #000;
-    }
-
-    /* Nút Sửa màu vàng cam */
-    .btn-edit {
-        background-color: #f39c12;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 14px;
-        margin-right: 5px;
-    }
-
-    .btn-edit:hover {
-        background-color: #e67e22;
-    }
-    </style>
+    <link rel="stylesheet" href="css/admin_users.css">
 </head>
 
 <body>
@@ -147,33 +90,49 @@ if (isset($_GET['delete_id'])) {
     <div class="main-content">
         <h2 class="page-title">Quản lý người dùng</h2>
 
-        <div class="form-add">
-            <h3>Thêm tài khoản mới</h3>
+        <div class="form-add-container">
+            <div class="form-add-header">
+                <i class="fa-solid fa-user-plus"></i> Thêm tài khoản mới
+            </div>
+
             <form method="POST">
-                <div class="form-group" style="display: flex; gap: 20px;">
-                    <div style="flex: 1;">
-                        <label>Tài khoản:</label>
-                        <input type="text" name="username" required>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label><i class="fa-solid fa-user"></i> Tài khoản</label>
+                        <input type="text" name="username" placeholder="Nhập tên đăng nhập..." required>
                     </div>
-                    <div style="flex: 1;">
-                        <label>Mật khẩu:</label>
-                        <input type="text" name="password" required>
+                    <div class="form-col">
+                        <label><i class="fa-solid fa-lock"></i> Mật khẩu</label>
+                        <input type="text" name="password" placeholder="Nhập mật khẩu..." required>
                     </div>
                 </div>
-                <div class="form-group" style="display: flex; gap: 20px;">
-                    <div style="flex: 1;">
-                        <label>Họ tên:</label>
-                        <input type="text" name="fullname" required>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <label><i class="fa-solid fa-signature"></i> Họ và tên</label>
+                        <input type="text" name="fullname" placeholder="Nhập họ tên đầy đủ..." required>
                     </div>
-                    <div style="flex: 1;">
-                        <label>Quyền:</label>
+                    <div class="form-col">
+                        <label><i class="fa-solid fa-shield-halved"></i> Phân quyền</label>
                         <select name="role">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
+                            <option value="user">Người dùng (User)</option>
+                            <option value="admin">Quản trị viên (Admin)</option>
                         </select>
                     </div>
                 </div>
-                <button type="submit" name="add_user" class="btn-submit">Thêm mới</button>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <label><i class="fa-solid fa-location-dot"></i> Địa chỉ</label>
+                        <input type="text" name="address" placeholder="Nhập địa chỉ (Tùy chọn)...">
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <button type="submit" name="add_user" class="btn-add-new">
+                        <i class="fa-solid fa-plus"></i> Thêm người dùng
+                    </button>
+                </div>
             </form>
         </div>
 
@@ -183,8 +142,10 @@ if (isset($_GET['delete_id'])) {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Avatar</th>
                         <th>Tài khoản</th>
                         <th>Họ tên</th>
+                        <th>Địa chỉ</th>
                         <th>Quyền</th>
                         <th>Hành động</th>
                     </tr>
@@ -193,16 +154,30 @@ if (isset($_GET['delete_id'])) {
                     <?php
                     $result = mysqli_query($conn, "SELECT * FROM Users ORDER BY id DESC");
                     while ($row = mysqli_fetch_assoc($result)) {
+                        // Xử lý hiển thị Avatar
+                        $avatarFile = !empty($row['avatar']) ? $row['avatar'] : 'user_default.png';
+                        $avatarPath = "./assets/images/avatar/" . $avatarFile;
+                        
+                        // Nếu file không tồn tại thì dùng ảnh mặc định online
+                        if (!file_exists($avatarPath)) {
+                            $avatarPath = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        }
                     ?>
                     <tr>
                         <td><?= $row['id'] ?></td>
+                        <td>
+                            <img src="<?= $avatarPath ?>" alt="avt" class="user-avatar-thumb">
+                        </td>
                         <td><?= htmlspecialchars($row['username']) ?></td>
                         <td><?= htmlspecialchars($row['fullname']) ?></td>
+                        <td><?= htmlspecialchars($row['address'] ?? 'Chưa cập nhật') ?></td>
                         <td>
                             <?php if($row['role'] == 'admin'): ?>
-                            <span style="color:red; font-weight:bold">Admin</span>
+                            <span
+                                style="color:red; font-weight:bold; background: #ffebee; padding: 4px 8px; border-radius: 4px;">Admin</span>
                             <?php else: ?>
-                            <span style="color:green; font-weight:bold">User</span>
+                            <span
+                                style="color:green; font-weight:bold; background: #e8f5e9; padding: 4px 8px; border-radius: 4px;">User</span>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -210,6 +185,7 @@ if (isset($_GET['delete_id'])) {
                                 '<?= $row['id'] ?>', 
                                 '<?= htmlspecialchars($row['username']) ?>', 
                                 '<?= htmlspecialchars($row['fullname']) ?>', 
+                                '<?= htmlspecialchars($row['address'] ?? '') ?>',
                                 '<?= $row['role'] ?>'
                             )">Sửa</button>
 
@@ -228,19 +204,26 @@ if (isset($_GET['delete_id'])) {
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeEditModal()">&times;</span>
-            <h3 style="margin-bottom: 20px; color: #2e7d32;">Chỉnh sửa thông tin</h3>
+            <h3 style="margin-bottom: 20px; color: #2e7d32; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Chỉnh sửa thông tin
+            </h3>
 
             <form method="POST">
                 <input type="hidden" name="edit_id" id="edit_id">
 
                 <div class="form-group">
                     <label>Tài khoản (Không thể đổi):</label>
-                    <input type="text" id="edit_username" disabled style="background: #eee;">
+                    <input type="text" id="edit_username" disabled style="background: #eee; cursor: not-allowed;">
                 </div>
 
                 <div class="form-group">
                     <label>Họ và tên:</label>
                     <input type="text" name="edit_fullname" id="edit_fullname" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ:</label>
+                    <input type="text" name="edit_address" id="edit_address">
                 </div>
 
                 <div class="form-group">
@@ -258,7 +241,7 @@ if (isset($_GET['delete_id'])) {
 
                 <div style="text-align: right; margin-top: 20px;">
                     <button type="button" onclick="closeEditModal()"
-                        style="padding: 8px 15px; margin-right: 10px; cursor: pointer;">Hủy</button>
+                        style="padding: 8px 15px; margin-right: 10px; cursor: pointer; background: #ddd; border: none; border-radius: 4px;">Hủy</button>
                     <button type="submit" name="edit_user" class="btn-submit">Lưu thay đổi</button>
                 </div>
             </form>
@@ -267,13 +250,14 @@ if (isset($_GET['delete_id'])) {
 
     <script>
     // Hàm mở popup và điền dữ liệu
-    function openEditModal(id, username, fullname, role) {
+    function openEditModal(id, username, fullname, address, role) {
         document.getElementById('editModal').style.display = 'flex';
 
         // Điền dữ liệu vào form
         document.getElementById('edit_id').value = id;
         document.getElementById('edit_username').value = username;
         document.getElementById('edit_fullname').value = fullname;
+        document.getElementById('edit_address').value = address;
         document.getElementById('edit_role').value = role;
     }
 

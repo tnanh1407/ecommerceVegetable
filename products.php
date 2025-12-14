@@ -74,7 +74,7 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sản phẩm - Organic Mart</title>
-    <link rel="stylesheet" href="./css/product.css">
+    <link rel="stylesheet" href="./css/products.css">
 </head>
 
 <body>
@@ -89,10 +89,13 @@ $result = mysqli_query($conn, $sql);
                     <ul class="side-bar__categorys">
                         <li><a href="<?php echo createUrl('type', ''); ?>"
                                 class="<?= $currentType == '' ? 'active' : '' ?>">Tất cả</a></li>
+
                         <li><a href="<?php echo createUrl('type', 'rau_xanh'); ?>"
                                 class="<?= $currentType == 'rau_xanh' ? 'active' : '' ?>">Rau xanh</a></li>
-                        <li><a href="<?php echo createUrl('type', 'rau_cu'); ?>"
-                                class="<?= $currentType == 'rau_cu' ? 'active' : '' ?>">Rau củ</a></li>
+
+                        <li><a href="<?php echo createUrl('type', 'rau_qua'); ?>"
+                                class="<?= $currentType == 'rau_qua' ? 'active' : '' ?>">Rau quả</a></li>
+
                         <li><a href="<?php echo createUrl('type', 'trai_cay'); ?>"
                                 class="<?= $currentType == 'trai_cay' ? 'active' : '' ?>">Trái cây</a></li>
                     </ul>
@@ -142,9 +145,9 @@ $result = mysqli_query($conn, $sql);
                             if($keyword) {
                                 echo "Tìm thấy: \"$keyword\"";
                             } elseif($currentType == 'rau_xanh') {
-                                echo 'Rau Xanh';
-                            } elseif($currentType == 'rau_cu') {
-                                echo 'Rau Củ';
+                                echo 'Rau Xanh'; // [ĐÃ SỬA] Hiển thị đúng tiêu đề
+                            } elseif($currentType == 'rau_qua') {
+                                echo 'Rau Quả';
                             } elseif($currentType == 'trai_cay') {
                                 echo 'Trái Cây';
                             } else {
@@ -183,10 +186,12 @@ $result = mysqli_query($conn, $sql);
                         if ($result && mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $typeText = '';
-                                if ($row['type'] == 'rau_cu') $typeText = 'Rau củ';
+                                // [ĐÃ SỬA] Logic hiển thị loại sản phẩm theo DB mới
+                                if ($row['type'] == 'rau_xanh') $typeText = 'Rau xanh';
                                 elseif ($row['type'] == 'rau_qua') $typeText = 'Rau quả';
                                 elseif ($row['type'] == 'trai_cay') $typeText = 'Trái cây';
                                 else $typeText = 'Khác';
+                                
                                 $statusText = ($row['status'] == 'con_hang') ? 'Còn hàng' : 'Hết hàng';
                         ?>
                         <div class="content__product-item">
@@ -210,7 +215,6 @@ $result = mysqli_query($conn, $sql);
                         <?php
                             }
                         } else {
-                            // Đã thay đổi phần này để sử dụng class CSS
                             echo "<div class='no-product-found'>
                                     <i class='fa-solid fa-magnifying-glass'></i>
                                     <p>Không tìm thấy sản phẩm nào!</p>

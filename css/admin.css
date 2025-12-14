@@ -12,20 +12,20 @@ body {
    SIDEBAR (MODERN STYLE)
    ======================== */
 .sidebar {
-  width: 260px; /* Rộng hơn chút để thoáng */
-  background-color: #343a40; /* Giữ màu nền tối chuyên nghiệp */
+  width: 260px;
+  background-color: #343a40;
   color: white;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); /* Bóng đổ ngăn cách với content */
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
 
 .sidebar__logo {
   padding: 25px 20px;
   text-align: center;
-  background: linear-gradient(135deg, #2e7d32, #43a047); /* Gradient xanh lá */
+  background: linear-gradient(135deg, #2e7d32, #43a047);
   font-weight: 800;
   font-size: 22px;
   letter-spacing: 1.5px;
@@ -37,12 +37,12 @@ body {
 
 .sidebar__menu {
   list-style: none;
-  padding: 0 15px; /* Thêm padding 2 bên để menu thụt vào */
+  padding: 0 15px;
   margin-top: 10px;
 }
 
 .sidebar__menu li {
-  margin-bottom: 8px; /* Khoảng cách giữa các mục */
+  margin-bottom: 8px;
 }
 
 .sidebar__menu li a {
@@ -71,6 +71,7 @@ body {
   box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
 }
 
+/* Nút đăng xuất */
 .sidebar__menu li a[href*="logout"] {
   margin-top: 20px;
   border: 1px solid rgba(255, 107, 107, 0.3);
@@ -83,7 +84,10 @@ body {
   border-color: #dc3545;
   box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
 }
-/* MAIN CONTENT */
+
+/* ========================
+   MAIN CONTENT
+   ======================== */
 .main-content {
   flex-grow: 1;
   padding: 20px;
@@ -97,7 +101,9 @@ body {
   padding-bottom: 10px;
 }
 
-/* CARDS DASHBOARD */
+/* ========================
+   DASHBOARD CARDS
+   ======================== */
 .dashboard-cards {
   display: flex;
   gap: 20px;
@@ -120,7 +126,9 @@ body {
   color: #2e7d32;
 }
 
-/* TABLES */
+/* ========================
+   TABLES (STYLES CHUNG)
+   ======================== */
 .table-container {
   background: white;
   padding: 20px;
@@ -128,25 +136,48 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
 }
+
+.table-container h3 {
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: capitalize;
+  margin-bottom: 16px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
+
 th,
 td {
   padding: 12px;
-  text-align: left;
   border-bottom: 1px solid #ddd;
 }
+
 th {
   background-color: #2e7d32;
   color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
 }
+
+td {
+  font-size: 16px;
+  text-align: center; /* Căn giữa chiều ngang */
+  vertical-align: middle; /* Căn giữa chiều dọc */
+  padding: 10px;
+}
+
 tr:hover {
   background-color: #f1f1f1;
 }
 
+/* ========================
+   BUTTONS & FORMS (Cơ bản)
+   ======================== */
 .btn-delete {
   background-color: #dc3545;
   color: white;
@@ -158,7 +189,7 @@ tr:hover {
   font-size: 14px;
 }
 
-/* FORM ADD PRODUCT */
+/* Form Add cũ (giữ lại để tương thích nếu cần) */
 .form-add {
   background: white;
   padding: 20px;

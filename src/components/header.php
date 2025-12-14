@@ -1,14 +1,18 @@
 <?php
-// Kiểm tra session đã được start chưa, nếu chưa thì start để lấy được thông tin user
+// Kiểm tra session đã được start chưa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $isLoggedIn = false;
 $username = '';
+$role = ''; // Khởi tạo biến role
+
 if (isset($_SESSION['user'])) {
     $isLoggedIn = true;
     $username = $_SESSION['user'];
+    // Lấy role từ session nếu có (được set lúc login)
+    $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
 }
 ?>
 <header class="header container-full">
@@ -28,19 +32,25 @@ if (isset($_SESSION['user'])) {
             </div>
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
+
         <?php if ($isLoggedIn): ?>
-        <div class="header__user">
-            <div class="header__user-name">
-                <span>Xin chào, <?php echo htmlspecialchars($username); ?></span>
-                <i class="fa-solid fa-caret-down"></i>
-            </div>
-            <div class="header__dropdown">
-                <a href="profile.php"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a>
-                <a href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng</a>
-                <hr style="margin: 0; border: 0; border-top: 1px solid #eee" />
-                <a href="logout.php" style="color: red"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
-            </div>
-        </div>
+        <span style="color: white; font-weight: bold; margin-right: 5px;">Xin chào,
+            <?php echo htmlspecialchars($username); ?></span>
+
+        <a href="profile.php" title="Thông tin cá nhân">
+            <i class="fa-solid fa-user"></i> Hồ sơ
+        </a>
+
+        <?php if ($role !== 'admin'): ?>
+        <a href="cart.php" title="Giỏ hàng">
+            <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
+        </a>
+        <?php endif; ?>
+
+        <a href="logout.php" title="Đăng xuất" style="margin-left: 5px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Thoát
+        </a>
+
         <?php else: ?>
         <a href="login.php">Đăng nhập</a>
         <a href="register.php">Đăng kí</a>

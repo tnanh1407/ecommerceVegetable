@@ -123,7 +123,7 @@ $resultCart = mysqli_query($conn, $sqlCart);
                         ?>
                     <tr>
                         <td class="product-col">
-                            <img src="./assets/images/<?php echo $row['image']; ?>" alt="img">
+                            <img src="./assets/images/product/<?php echo $row['image']; ?>" alt="img">
                             <span><?php echo $row['name']; ?></span>
                         </td>
                         <td><?php echo number_format($row['price'], 0, ',', '.'); ?>đ</td>
@@ -154,7 +154,7 @@ $resultCart = mysqli_query($conn, $sqlCart);
                     <span class="total-price"><?php echo number_format($totalMoney, 0, ',', '.'); ?>đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a href="product.php" class="btn-continue">Tiếp tục mua sắm</a>
+                    <a href="products.php" class="btn-continue">Tiếp tục mua sắm</a>
                     <button class="btn-checkout">Thanh toán ngay</button>
                 </div>
             </div>
