@@ -7,6 +7,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: "Roboto", sans-serif;
 }
@@ -29,105 +30,194 @@ HEADER
   align-items: center;
   justify-content: space-around;
   padding: 10px 0;
+  position: relative; /* Để z-index hoạt động tốt */
 }
+
 .header .header__left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
 }
 
 .header a {
   text-decoration: none;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.header a:hover {
+  opacity: 0.9;
 }
 
 .header .header__left .header__logo img {
   width: 100px;
   height: auto;
+  vertical-align: middle;
 }
 
 .header .header__right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+}
+
+/* Form tìm kiếm */
+.header__search-form {
+  position: relative;
 }
 
 .header .header__right button {
   height: 40px;
   width: 40px;
-  border-radius: 8px;
+  border-radius: 0 8px 8px 0; /* Bo góc phải */
   border: none;
   background-color: white;
   font-size: 16px;
+  color: #1c8c3f;
+  cursor: pointer;
 }
 
 .header .header__right input {
   font-size: 14px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px; /* Bo góc trái */
   border: none;
   width: 300px;
   padding-left: 20px;
+  outline: none;
 }
 
-/* ============= */
+/* =========================================
+   PHẦN USER & DROPDOWN MENU (ĐÃ CHỈNH SỬA)
+   ========================================= */
+
 .header__user {
-  position: relative;
-  display: inline-block;
+  position: relative; /* Quan trọng để định vị menu con */
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  margin-left: 15px;
-  font-weight: bold;
-  color: #2e7d32;
+  margin-left: 10px;
+  padding: 5px 0;
 }
 
 .header__user-name {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
 }
 
+.header__user-name i {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* Khối Dropdown Menu */
 .header__dropdown {
-  display: none;
-  /* Ẩn mặc định */
+  display: none; /* Ẩn mặc định */
   position: absolute;
+  top: 100%; /* Hiển thị ngay bên dưới */
   right: 0;
-  top: 100%;
-  background-color: white;
-  min-width: 200px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-  border-radius: 4px;
-  overflow: hidden;
+  width: 230px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); /* Đổ bóng mềm */
+  z-index: 1000;
+  padding: 8px 0;
+  margin-top: 10px; /* Tạo khoảng cách nhỏ */
+  transform-origin: top right;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-/* Hiện dropdown khi hover vào header__user */
+/* Mũi tên nhỏ chỉ lên trên (trang trí) */
+.header__dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  transform: rotate(45deg);
+  box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Cầu nối trong suốt để không bị mất hover khi di chuột xuống */
+.header__user::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  top: 100%;
+  left: 0;
+}
+
+/* Hiển thị menu khi hover vào User */
 .header__user:hover .header__dropdown {
   display: block;
 }
 
-.header__dropdown a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  font-size: 14px;
-  font-weight: normal;
-  text-align: left;
-  transition: 0.2s;
-}
-
-.header__dropdown a:hover {
-  background-color: #f1f1f1;
-  color: #2e7d32;
-}
-
-/* Chỉnh lại header right một chút để căn giữa */
-.header__right {
+/* Style cho các link bên trong Menu */
+.header .header__dropdown a {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #333; /* Màu chữ đen (ghi đè màu trắng global) */
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+/* Icon bên trong menu */
+.header .header__dropdown a i {
+  width: 20px;
+  text-align: center;
+  color: #888;
+}
+
+/* Hiệu ứng khi hover vào từng mục */
+.header .header__dropdown a:hover {
+  background-color: #f1f8e9; /* Màu nền xanh nhạt */
+  color: #1c8c3f; /* Chữ chuyển xanh */
+  padding-left: 25px; /* Hiệu ứng trượt nhẹ */
+}
+
+.header .header__dropdown a:hover i {
+  color: #1c8c3f;
+}
+
+/* Style riêng cho nút Đăng xuất */
+.header .header__dropdown a[href="logout.php"] {
+  color: #d32f2f !important; /* Màu đỏ */
+  border-bottom: none;
+}
+
+.header .header__dropdown a[href="logout.php"] i {
+  color: #ef5350;
+}
+
+.header .header__dropdown a[href="logout.php"]:hover {
+  background-color: #ffebee; /* Nền đỏ nhạt */
+  color: #b71c1c !important;
+}
+
+/* Animation xuất hiện */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /*==========================

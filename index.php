@@ -67,7 +67,7 @@
         <div class="category__list">
             <div class="category__item">
                 <a href="product.php?type=rau_xanh">
-                    <img src="./assets/images/nam_dui_ga.jpg" alt="img_rauXanh" />
+                    <img src="./assets/images/rau_cu.jpg" alt="img_rauXanh" />
                     <p>Rau xanh</p>
                 </a>
             </div>

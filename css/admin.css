@@ -8,47 +8,81 @@ body {
   min-height: 100vh;
 }
 
-/* SIDEBAR */
+/* ========================
+   SIDEBAR (MODERN STYLE)
+   ======================== */
 .sidebar {
-  width: 250px;
-  background-color: #343a40;
+  width: 260px; /* Rộng hơn chút để thoáng */
+  background-color: #343a40; /* Giữ màu nền tối chuyên nghiệp */
   color: white;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); /* Bóng đổ ngăn cách với content */
+  z-index: 100;
 }
 
 .sidebar__logo {
-  padding: 20px;
+  padding: 25px 20px;
   text-align: center;
-  background-color: #2e7d32;
-  font-weight: bold;
-  font-size: 20px;
-  letter-spacing: 1px;
+  background: linear-gradient(135deg, #2e7d32, #43a047); /* Gradient xanh lá */
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
 }
 
 .sidebar__menu {
   list-style: none;
-  padding: 0;
-  margin-top: 20px;
+  padding: 0 15px; /* Thêm padding 2 bên để menu thụt vào */
+  margin-top: 10px;
+}
+
+.sidebar__menu li {
+  margin-bottom: 8px; /* Khoảng cách giữa các mục */
 }
 
 .sidebar__menu li a {
-  display: block;
-  padding: 15px 20px;
-  color: #c2c7d0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #b0b8c1;
   text-decoration: none;
-  border-bottom: 1px solid #4b545c;
-  transition: 0.3s;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: none;
 }
 
-.sidebar__menu li a:hover,
+/* Hiệu ứng khi Hover */
+.sidebar__menu li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateX(5px);
+}
+
 .sidebar__menu li a.active {
-  background-color: #494e53;
+  background: linear-gradient(45deg, #2e7d32, #66bb6a);
   color: white;
-  border-left: 4px solid #2e7d32;
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
 }
 
+.sidebar__menu li a[href*="logout"] {
+  margin-top: 20px;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+}
+
+.sidebar__menu li a[href*="logout"]:hover {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+}
 /* MAIN CONTENT */
 .main-content {
   flex-grow: 1;

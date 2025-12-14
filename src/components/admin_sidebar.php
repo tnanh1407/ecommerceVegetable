@@ -1,6 +1,6 @@
 <div class="sidebar">
     <div class="sidebar__logo">
-        ADMIN C PANNEL
+        ADMIN
     </div>
     <ul class="sidebar__menu">
         <?php $page = basename($_SERVER['PHP_SELF']); ?>

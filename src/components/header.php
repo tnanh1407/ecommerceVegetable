@@ -17,10 +17,10 @@ if (isset($_SESSION['user'])) {
             <img src="./assets/images/logo.png" alt="img_logo " />
         </div>
         <a href="index.php">Trang chủ</a>
-        <a href="product.php">Sản phẩm</a>
+        <a href="products.php">Sản phẩm</a>
     </div>
     <div class=" header__right">
-        <form action="product.php" method="GET" class="header__search-form"
+        <form action="products.php" method="GET" class="header__search-form"
             style="display: flex; align-items: center; gap: 10px;">
             <div class="header__search">
                 <input type="text" name="keyword" placeholder="Tìm kiếm..."

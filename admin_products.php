@@ -360,7 +360,7 @@ if (isset($_GET['delete_id'])) {
 
         // Xử lý ảnh
         document.getElementById('current_image').value = image;
-        document.getElementById('preview_img').src = './assets/images/' + image;
+        document.getElementById('preview_img').src = './assets/images/product/' + image;
     }
 
     function closeEditModal() {
