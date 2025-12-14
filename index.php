@@ -1,6 +1,5 @@
 <?php
   session_start();
-  // 1. MỞ COMMENT KẾT NỐI DATABASE
   include('connect.php'); 
 
   $isLoggedIn = false ;
@@ -11,7 +10,6 @@
   }
   
   // 2. TRUY VẤN SẢN PHẨM BÁN CHẠY (Lấy ví dụ 8 sản phẩm mới nhất)
-  // Nếu muốn lấy ngẫu nhiên bạn có thể đổi thành "ORDER BY RAND() LIMIT 8"
   $sql = "SELECT * FROM Products LIMIT 8";
   $result = mysqli_query($conn, $sql);
 ?>
@@ -97,7 +95,6 @@
         // Kiểm tra và lặp qua dữ liệu lấy từ DB
         if ($result && mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-                // Xử lý hiển thị tên loại đẹp hơn
                 $typeText = '';
                 if ($row['type'] == 'rau_cu') $typeText = 'Rau củ';
                 elseif ($row['type'] == 'rau_qua') $typeText = 'Rau quả';
@@ -132,7 +129,7 @@
                 </a>
             </div>
             <?php 
-            } // End while
+            } 
         } else {
             echo "<p>Chưa có sản phẩm nào.</p>";
         }

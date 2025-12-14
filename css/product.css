@@ -1,4 +1,4 @@
-@import "./main.css";
+/* @import "./main.css"; */
 
 /* --- LAYOUT CHUNG --- */
 .product-main {
@@ -6,7 +6,7 @@
   gap: 30px;
   margin-top: 30px;
   margin-bottom: 50px;
-  align-items: flex-start; /* Để sidebar không bị kéo dài theo chiều cao content */
+  align-items: flex-start;
 }
 
 /* --- SIDEBAR TRÁI --- */
@@ -14,6 +14,7 @@
   width: 250px;
   flex-shrink: 0;
   background: #fff;
+  background-color: red;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -31,10 +32,52 @@
   border-bottom: 2px solid #eee;
   padding-bottom: 5px;
 }
-
 .side-bar__categorys {
   list-style: none;
   padding-left: 0;
+}
+
+.side-bar__categorys li a {
+  text-decoration: none;
+  color: #333;
+  transition: all 0.2s;
+  display: block;
+  padding: 5px 0;
+  border-left: 3px solid transparent;
+  padding-left: 5px;
+}
+
+.side-bar__categorys li a:hover {
+  color: #43a047;
+  padding-left: 10px;
+}
+
+.side-bar__categorys li a.active {
+  color: #2e7d32;
+  font-weight: bold;
+  border-left: 3px solid #2e7d32;
+  padding-left: 10px;
+  background-color: #e8f5e9;
+}
+
+/* Nút Reset Filter */
+.btn-reset-filter {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  padding: 8px;
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #c62828;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-reset-filter:hover {
+  background-color: #c62828;
+  color: white;
 }
 
 /* --- CONTENT PHẢI --- */
@@ -54,6 +97,13 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+.content__funtion h2 {
+  margin: 0;
+  color: #2e7d32;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .sort-box select {
   padding: 6px 10px;
   border: 1px solid #ddd;
@@ -69,6 +119,46 @@
   gap: 20px;
 }
 
+/* --- KHÔNG TÌM THẤY SẢN PHẨM --- */
+.no-product-found {
+  grid-column: 1 / -1; /* Quan trọng: Tràn hết chiều ngang grid */
+  width: 100%;
+  text-align: center;
+  padding: 60px 20px;
+  color: #757575;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-product-found i {
+  font-size: 50px;
+  margin-bottom: 20px;
+  color: #bdbdbd;
+}
+
+.no-product-found p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.no-product-found .back-link {
+  color: #2e7d32;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid #2e7d32;
+  padding: 10px 25px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.no-product-found .back-link:hover {
+  background-color: #2e7d32;
+  color: #fff;
+}
+
+/* --- PRODUCT ITEM --- */
 .content__product-item {
   background: #fff;
   padding: 15px;

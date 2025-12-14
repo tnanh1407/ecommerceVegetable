@@ -18,12 +18,12 @@ $currentType = isset($_GET['type']) ? $_GET['type'] : '';
 $currentNation = isset($_GET['nation']) ? $_GET['nation'] : '';
 $currentPriceRange = isset($_GET['price_range']) ? $_GET['price_range'] : '';
 $sortOption = isset($_GET['sort']) ? $_GET['sort'] : '';
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : ''; // Lấy keyword
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : ''; 
 
 // --- 3. XỬ LÝ SQL ---
 $whereClauses = [];
 
-// [MỚI] Logic Tìm kiếm
+// Logic Tìm kiếm
 if ($keyword) {
     $safeKeyword = mysqli_real_escape_string($conn, $keyword);
     $whereClauses[] = "name LIKE '%$safeKeyword%'";
@@ -74,60 +74,7 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sản phẩm - Organic Mart</title>
-    <link rel="stylesheet" href="./css/product.css" />
-    <style>
-    .content__funtion {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-    }
-
-    .side-bar__categorys li a {
-        text-decoration: none;
-        color: #333;
-        transition: all 0.2s;
-        display: block;
-        padding: 5px 0;
-        border-left: 3px solid transparent;
-        padding-left: 5px;
-    }
-
-    .side-bar__categorys li a:hover {
-        color: #43a047;
-        padding-left: 10px;
-    }
-
-    .side-bar__categorys li a.active {
-        color: #2e7d32;
-        font-weight: bold;
-        border-left: 3px solid #2e7d32;
-        padding-left: 10px;
-        background-color: #e8f5e9;
-    }
-
-    .btn-reset-filter {
-        display: block;
-        text-align: center;
-        margin-top: 15px;
-        padding: 8px;
-        background-color: #ffebee;
-        color: #c62828;
-        border: 1px solid #c62828;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .btn-reset-filter:hover {
-        background-color: #c62828;
-        color: white;
-    }
-    </style>
+    <link rel="stylesheet" href="./css/product.css">
 </head>
 
 <body>
@@ -190,9 +137,8 @@ $result = mysqli_query($conn, $sql);
 
             <div class="content">
                 <div class="content__funtion">
-                    <h2 style="margin: 0; color: #2e7d32; font-size: 20px;">
+                    <h2>
                         <?php 
-                            // [MỚI] Hiển thị tiêu đề khi tìm kiếm
                             if($keyword) {
                                 echo "Tìm thấy: \"$keyword\"";
                             } elseif($currentType == 'rau_xanh') {
@@ -264,10 +210,11 @@ $result = mysqli_query($conn, $sql);
                         <?php
                             }
                         } else {
-                            echo "<div style='width:100%; text-align:center; padding: 40px; color: gray;'>
-                                    <i class='fa-solid fa-magnifying-glass' style='font-size: 40px; margin-bottom: 10px;'></i>
+                            // Đã thay đổi phần này để sử dụng class CSS
+                            echo "<div class='no-product-found'>
+                                    <i class='fa-solid fa-magnifying-glass'></i>
                                     <p>Không tìm thấy sản phẩm nào!</p>
-                                    <a href='products.php' style='color:#2e7d32; font-weight:bold'>Xem tất cả sản phẩm</a>
+                                    <a href='products.php' class='back-link'>Xem tất cả sản phẩm</a>
                                   </div>";
                         }
                         ?>

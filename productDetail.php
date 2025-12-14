@@ -27,7 +27,6 @@ $type = $product['type'];
 $sqlRelated = "SELECT * FROM Products WHERE type = '$type' AND id != $id LIMIT 4";
 $resultRelated = mysqli_query($conn, $sqlRelated);
 
-// Xử lý hiển thị text loại và trạng thái
 $typeText = '';
 if ($product['type'] == 'rau_cu') $typeText = 'Rau củ';
 elseif ($product['type'] == 'rau_qua') $typeText = 'Rau quả';
