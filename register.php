@@ -2,42 +2,58 @@
 session_start();
 include('connect.php');
 
-$error = '';
-$success = '';
+// Biến dùng để kích hoạt Popup
+$popupType = ''; 
+$popupMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Lấy dữ liệu từ form
+    // Lấy dữ liệu và làm sạch
     $fullname = isset($_POST['fullname']) ? trim($_POST['fullname']) : '';
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
 
+    // --- CÁC TRƯỜNG HỢP KIỂM TRA ---
+    
     // 1. Kiểm tra rỗng
     if (empty($fullname) || empty($username) || empty($password) || empty($confirm_password)) {
-        $error = "Vui lòng nhập đầy đủ thông tin!";
+        $popupType = 'error';
+        $popupMessage = "Vui lòng nhập đầy đủ tất cả thông tin!";
     } 
-    // 2. Kiểm tra mật khẩu nhập lại
+    // 2. Kiểm tra độ dài mật khẩu (Ví dụ: tối thiểu 6 ký tự)
+    elseif (strlen($password) < 6) {
+        $popupType = 'error';
+        $popupMessage = "Mật khẩu phải có ít nhất 6 ký tự!";
+    }
+    // 3. Kiểm tra mật khẩu xác nhận
     elseif ($password !== $confirm_password) {
-        $error = "Mật khẩu xác nhận không khớp!";
+        $popupType = 'error';
+        $popupMessage = "Mật khẩu xác nhận không khớp!";
     } 
     else {
-        // 3. Kiểm tra tài khoản đã tồn tại chưa
-        // Lưu ý: Tên bảng là 'Users', cột là 'username' (theo database.sql)
-        $sql_check = "SELECT * FROM Users WHERE username = '$username'";
+        // 4. Kiểm tra tài khoản đã tồn tại chưa
+        $usernameSafe = mysqli_real_escape_string($conn, $username);
+        $sql_check = "SELECT * FROM Users WHERE username = '$usernameSafe'";
         $result_check = mysqli_query($conn, $sql_check);
 
         if (mysqli_num_rows($result_check) > 0) {
-            $error = "Tài khoản này đã tồn tại, vui lòng chọn tên khác!";
+            $popupType = 'error';
+            $popupMessage = "Tài khoản '$username' đã tồn tại. Vui lòng chọn tên khác!";
         } else {
-            // 4. Thêm mới người dùng vào DB
-            // Cột: username, password, fullname, role
-            $sql = "INSERT INTO Users (username, password, fullname, role) 
-                    VALUES ('$username', '$password', '$fullname', 'user')";
+            // 5. Thêm mới người dùng vào DB
+            $passwordSafe = mysqli_real_escape_string($conn, $password);
+            $fullnameSafe = mysqli_real_escape_string($conn, $fullname);
+            
+            // Mặc định avatar là user_default.png
+            $sql = "INSERT INTO Users (username, password, fullname, role, avatar) 
+                    VALUES ('$usernameSafe', '$passwordSafe', '$fullnameSafe', 'user', null)";
             
             if (mysqli_query($conn, $sql)) {
-                $success = "Đăng ký thành công! <a href='login.php' style='color: #2e7d32; text-decoration: underline'>Đăng nhập ngay</a>";
+                $popupType = 'success';
+                $popupMessage = "Đăng ký thành công! Bạn có thể đăng nhập ngay.";
             } else {
-                $error = "Có lỗi xảy ra: " . mysqli_error($conn);
+                $popupType = 'error';
+                $popupMessage = "Lỗi hệ thống: " . mysqli_error($conn);
             }
         }
     }
@@ -51,13 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng ký - Organic Mart</title>
-    <link rel="stylesheet" href="css/login.css" />
-    <style>
-    .login-container {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-    </style>
+    <link rel="stylesheet" href="css/register.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -68,18 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <h2>Đăng ký thành viên</h2>
 
-        <?php if (!empty($error)) { ?>
-        <p class="error" style="color:red; margin-bottom: 10px;"><?= $error ?></p>
-        <?php } ?>
-
-        <?php if (!empty($success)) { ?>
-        <p class="success" style="color:green; font-weight:bold; margin-bottom: 10px;"><?= $success ?></p>
-        <?php } ?>
-
         <form method="post" action="">
             <div class="form-group">
                 <label for="fullname">Họ và tên</label>
-                <input type="text" name="fullname" id="fullname" placeholder="Nhập họ và tên..."
+                <input type="text" name="fullname" id="fullname" placeholder="Ví dụ: Nguyễn Văn A"
                     value="<?php echo isset($fullname) ? htmlspecialchars($fullname) : '' ?>" />
             </div>
 
@@ -109,13 +112,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn-login">Đăng ký</button>
         </form>
 
-        <div style="margin-top: 15px">
+        <div class="register-link-box">
             <span>Bạn đã có tài khoản? </span>
             <a href="login.php" class="register-btn">Đăng nhập ngay</a>
         </div>
     </div>
 
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+
+            <div class="modal-icon" id="modalIcon">
+            </div>
+
+            <p id="modalMessage" class="modal-message"></p>
+
+            <button class="btn-confirm" id="modalBtn" onclick="closeModal()">Đã hiểu</button>
+        </div>
+    </div>
+
     <script>
+    // 1. Hàm ẩn hiện mật khẩu (Xử lý cho cả 2 ô pass)
     function togglePassword(inputId, iconSpan) {
         let input = document.getElementById(inputId);
         let icon = iconSpan.querySelector("i");
@@ -130,6 +147,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             icon.classList.add("fa-eye");
         }
     }
+
+    // 2. Hàm đóng Modal
+    function closeModal() {
+        document.getElementById("notificationModal").style.display = "none";
+        // Nếu là success (đăng ký thành công) thì chuyển hướng về login khi đóng
+        <?php if ($popupType == 'success') { ?>
+        window.location.href = 'login.php';
+        <?php } ?>
+    }
+
+    // 3. Đóng khi click ngoài vùng modal
+    window.onclick = function(event) {
+        var modal = document.getElementById('notificationModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+
+    // 4. LOGIC HIỂN THỊ POPUP TỪ PHP
+    <?php if (!empty($popupType)) { ?>
+    var modal = document.getElementById("notificationModal");
+    var iconDiv = document.getElementById("modalIcon");
+    var msgP = document.getElementById("modalMessage");
+    var btn = document.getElementById("modalBtn");
+
+    modal.style.display = "flex";
+    msgP.innerText = "<?php echo $popupMessage; ?>";
+
+    // Xử lý giao diện theo loại (Thành công / Lỗi)
+    <?php if ($popupType == 'error') { ?>
+    iconDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+    iconDiv.className = "modal-icon error";
+    btn.innerText = "Thử lại";
+    <?php } else { ?>
+    iconDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+    iconDiv.className = "modal-icon success";
+    btn.innerText = "Đến trang đăng nhập";
+    <?php } ?>
+
+    <?php } ?>
     </script>
 </body>
 

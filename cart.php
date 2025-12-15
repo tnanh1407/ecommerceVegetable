@@ -164,7 +164,7 @@ $resultCart = mysqli_query($conn, $sqlCart);
             <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-2130356-1800917.png"
                 alt="Empty Cart">
             <p>Giỏ hàng của bạn đang trống!</p>
-            <a href="product.php" class="btn-shop-now">Mua sắm ngay</a>
+            <a href="products.php" class="btn-shop-now">Mua sắm ngay</a>
         </div>
         <?php } ?>
     </div>

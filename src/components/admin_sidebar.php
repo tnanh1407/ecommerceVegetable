@@ -10,7 +10,6 @@
                 phẩm</a></li>
         <li><a href="admin_users.php" class="<?= $page == 'admin_users.php' ? 'active' : '' ?>">Quản lý Người dùng</a>
         </li>
-        <li><a href="index.php" target="_blank">Xem trang web</a></li>
         <li><a href="logout.php" style="color: #ff6b6b;">Đăng xuất</a></li>
     </ul>
 </div>
